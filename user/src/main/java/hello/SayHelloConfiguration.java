@@ -1,16 +1,14 @@
 package hello;
 
-import java.util.Arrays;
-import java.util.List;
-
-import reactor.core.publisher.Flux;
-
-import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 /**
  * @author Olga Maciaszek-Sharma
@@ -20,8 +18,8 @@ public class SayHelloConfiguration {
 
     @Bean
     @Primary
-    ServiceInstanceListSupplier serviceInstanceListSupplier() {
-        return new DemoServiceInstanceListSuppler("say-hello");
+    ServiceInstanceListSupplier serviceInstanceListSupplier(DiscoveryClient discoveryClient) {
+        return new DemoServiceInstanceListSuppler("say-hello", discoveryClient);
     }
 
 }
@@ -29,9 +27,11 @@ public class SayHelloConfiguration {
 class DemoServiceInstanceListSuppler implements ServiceInstanceListSupplier {
 
     private final String serviceId;
+    private final DiscoveryClient discoveryClient;
 
-    DemoServiceInstanceListSuppler(String serviceId) {
+    DemoServiceInstanceListSuppler(String serviceId, DiscoveryClient discoveryClient) {
         this.serviceId = serviceId;
+        this.discoveryClient = discoveryClient;
     }
 
     @Override
@@ -41,9 +41,6 @@ class DemoServiceInstanceListSuppler implements ServiceInstanceListSupplier {
 
     @Override
     public Flux<List<ServiceInstance>> get() {
-        return Flux.just(Arrays
-                .asList(new DefaultServiceInstance(serviceId + "1", serviceId, "localhost", 8090, false),
-                        new DefaultServiceInstance(serviceId + "2", serviceId, "localhost", 9092, false),
-                        new DefaultServiceInstance(serviceId + "3", serviceId, "localhost", 9999, false)));
+        return Flux.just(discoveryClient.getInstances(serviceId));
     }
 }

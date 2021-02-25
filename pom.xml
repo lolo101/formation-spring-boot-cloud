@@ -8,8 +8,9 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-  <modules>
-    <module>say-hello</module>
-    <module>user</module>
-  </modules>
+    <modules>
+        <module>say-hello</module>
+        <module>user</module>
+        <module>discovery</module>
+    </modules>
 </project>
