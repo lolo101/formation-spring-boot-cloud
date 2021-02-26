@@ -1,3 +1,16 @@
 spring.application.name: user
 
 server.port: 8888
+
+spring:
+  cloud:
+    config:
+      uri: lb://config
+#  config:
+#    import: optional:configserver:http://localhost:8050/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -1,0 +1,10 @@
+server.port: 8050
+
+spring:
+  application:
+    name: config
+  cloud:
+    config:
+      server:
+        git:
+          uri: file://${user.home}/Documents/GitHub/formation-spring-boot-config
