@@ -14,7 +14,6 @@
     <name>say-hello</name>
     <description>Demo project for Spring Boot</description>
     <properties>
-        <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
         <java.version>1.8</java.version>
     </properties>
     <dependencies>
