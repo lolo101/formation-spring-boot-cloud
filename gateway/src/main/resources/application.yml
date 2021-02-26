@@ -1,0 +1,40 @@
+spring.application.name: gateway
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: bissextile
+          uri: lb://user
+          predicates:
+            - Between=2020-02-29T00:00:00Z,2020-03-01T00:00:00Z
+            - Method=OPTIONS,HEAD,GET
+          filters:
+            - PrefixPath=/hi
+            - AddRequestParameter=name,Bob
+        - id: old
+          uri: lb://user
+          predicates:
+            - Before=2020-02-29T00:00:00Z
+          filters:
+            - PrefixPath=/hello
+            - AddRequestParameter=name,Morane
+        - id: current
+          uri: lb://user
+          predicates:
+            - After=2020-02-29T00:00:00Z
+          filters:
+            - PrefixPath=/hi
+            - AddRequestParameter=name,Bill
